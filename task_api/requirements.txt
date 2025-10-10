@@ -7,3 +7,5 @@ python-dotenv
 pytest
 httpx
 alembic
+sqlalchemy
+psycopg2
