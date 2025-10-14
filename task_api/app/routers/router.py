@@ -15,7 +15,7 @@ def read_tasks(db: Session = Depends(get_db)):
 
 @router.post("/", response_model=schemas.Task, status_code=status.HTTP_201_CREATED)
 def create_task(task: schemas.TaskCreate, db: Session = Depends(get_db)):
-    db_task = models.Task(**task.dict())
+    db_task = models.Task(**task.model_dump())
     db.add(db_task)
     db.commit()
     db.refresh(db_task)
@@ -33,7 +33,7 @@ def update_task(task_id: int, task: schemas.TaskCreate, db: Session = Depends(ge
     db_task = db.query(models.Task).filter(models.Task.id == task_id).first()
     if db_task is None:
         raise HTTPException(status_code=404, detail="Task not found")
-    for key, value in task.dict().items():
+    for key, value in task.model_dump().items():
         setattr(db_task, key, value)
     db.commit()
     db.refresh(db_task)
